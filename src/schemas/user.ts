@@ -10,10 +10,10 @@ export const createUserDTOSchema = z.object({
 export const updateUserDTOSchema = createUserDTOSchema.omit({}).partial();
 
 export const usersQuerySchema = z.object({
-  sort: z.enum(["asc", "desc"]).default("desc").optional(),
-  sortBy: z.string().default("updatedAt").optional(),
-  page: z.coerce.number().int().default(1).optional(),
-  size: z.coerce.number().default(20).optional(),
+  sort: z.enum(["asc", "desc"]).optional(),
+  sortBy: z.string().optional(),
+  page: z.coerce.number().int().optional(),
+  size: z.coerce.number().optional(),
   search: z.string().optional(),
 });
 

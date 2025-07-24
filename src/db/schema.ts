@@ -9,7 +9,7 @@ export const AdminRole = t.mysqlEnum("admin_role", [
 ]);
 
 export const userTable = t.mysqlTable(
-  "admin",
+  "user",
   {
     id: t
       .char("id", { length: 36 })

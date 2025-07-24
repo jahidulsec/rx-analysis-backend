@@ -3,6 +3,7 @@ import { serveStatic } from "@hono/node-server/serve-static";
 import { logger } from "hono/logger";
 import router from "./routes";
 import "dotenv/config";
+import { HTTPException } from "hono/http-exception";
 
 export const app = new Hono();
 
@@ -14,3 +15,10 @@ app.get("/", (c) => {
 });
 
 app.route("/api", router);
+
+app.onError((err, c) => {
+  if (err instanceof HTTPException) {
+    return err.getResponse();
+  }
+  return c.json(err.message);
+});
