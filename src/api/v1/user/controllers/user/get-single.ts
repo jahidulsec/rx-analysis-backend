@@ -8,6 +8,7 @@ const get = async (c: Context) => {
   //get all items with validated queries
   const data = await userLib.getSingle(id);
 
+  // if no data, then throw 404
   if (data.length === 0) {
     notFoundError("User does not exist");
   }
@@ -15,7 +16,7 @@ const get = async (c: Context) => {
   const responseData = {
     success: true,
     message: "Get User details successfully!",
-    data: data,
+    data: data[0],
   };
 
   //send success response

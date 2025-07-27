@@ -1,6 +1,9 @@
 import { db } from "@/db/db";
 import { userTable } from "@/db/schema";
-import type { usersQueryInputTypes } from "@/schemas/user";
+import type {
+  createUserInputsTypes,
+  usersQueryInputTypes,
+} from "@/schemas/user";
 import { and, asc, desc, eq, like, sql } from "drizzle-orm";
 
 const getMulti = async (queries: usersQueryInputTypes) => {
@@ -52,7 +55,19 @@ const getSingle = async (id: string) => {
   return data;
 };
 
+const createNew = async (info: createUserInputsTypes) => {
+  const data = await db.insert(userTable).values({
+    fullName: info.full_name,
+    password: info.password,
+    role: info.role,
+    username: info.username,
+  })
+
+  return data;
+};
+
 export const userLib = {
   getMulti,
   getSingle,
+  createNew,
 };
