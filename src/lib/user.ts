@@ -78,9 +78,15 @@ const updateOne = async (id: string, info: updateUserInputTypes) => {
   return data;
 };
 
+const deleteOne = async (id: string) => {
+  const data = await db.delete(userTable).where(eq(userTable.id, id));
+  return data;
+};
+
 export const userLib = {
   getMulti,
   getSingle,
   createNew,
   updateOne,
+  deleteOne,
 };
