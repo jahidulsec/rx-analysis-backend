@@ -1,4 +1,3 @@
-import { sql } from "drizzle-orm";
 import * as t from "drizzle-orm/mysql-core";
 import { createdAt, id, updatedAt } from "./helper";
 
@@ -70,4 +69,3 @@ export const surveyTable = t.mysqlTable("survey", {
   createdAt: createdAt,
   updatedAt: updatedAt,
 });
-
