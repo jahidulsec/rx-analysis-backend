@@ -1,7 +1,7 @@
 import { db } from "@/db/db";
 import { userTable } from "@/db/schema";
 import type { usersQueryInputTypes } from "@/schemas/user";
-import { and, asc, desc, like, sql } from "drizzle-orm";
+import { and, asc, desc, eq, like, sql } from "drizzle-orm";
 
 const getMulti = async (queries: usersQueryInputTypes) => {
   const size = queries?.size ?? 20;
@@ -31,7 +31,7 @@ const getMulti = async (queries: usersQueryInputTypes) => {
   query.limit(size).offset(size * (page - 1));
 
   // sorting
-  if (queries.sort === "asc") {
+  if (sort === "asc") {
     query.orderBy(asc(userTable.createdAt));
   } else {
     query.orderBy(desc(userTable.createdAt));
@@ -42,6 +42,17 @@ const getMulti = async (queries: usersQueryInputTypes) => {
   return { data, count };
 };
 
+const getSingle = async (id: string) => {
+  const data = await db
+    .select()
+    .from(userTable)
+    .where(eq(userTable.id, id))
+    .limit(1);
+
+  return data;
+};
+
 export const userLib = {
   getMulti,
+  getSingle,
 };
