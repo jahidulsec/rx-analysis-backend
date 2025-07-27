@@ -2,6 +2,7 @@ import { db } from "@/db/db";
 import { userTable } from "@/db/schema";
 import type {
   createUserInputsTypes,
+  updateUserInputTypes,
   usersQueryInputTypes,
 } from "@/schemas/user";
 import { and, asc, desc, eq, like, sql } from "drizzle-orm";
@@ -57,11 +58,22 @@ const getSingle = async (id: string) => {
 
 const createNew = async (info: createUserInputsTypes) => {
   const data = await db.insert(userTable).values({
-    fullName: info.full_name,
+    fullName: info.fullName,
     password: info.password,
     role: info.role,
     username: info.username,
-  })
+  });
+
+  return data;
+};
+
+const updateOne = async (id: string, info: updateUserInputTypes) => {
+  const data = await db
+    .update(userTable)
+    .set({
+      ...info,
+    })
+    .where(eq(userTable.id, id));
 
   return data;
 };
@@ -70,4 +82,5 @@ export const userLib = {
   getMulti,
   getSingle,
   createNew,
+  updateOne,
 };

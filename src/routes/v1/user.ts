@@ -1,10 +1,12 @@
 import controller from "@/api/v1/user";
 import { Hono } from "hono";
 
-const user = new Hono().basePath("/user");
+const user = new Hono();
 
-user.get("/", controller.getUsers).post("/", controller.createUser);
+user.get("/user", controller.getUsers).post("/user", controller.createUser);
 
-user.get("/:id", controller.getUser);
+user
+  .get("/user/:id", controller.getUser)
+  .patch("/user/:id", controller.updateUser);
 
 export { user as userRouter };

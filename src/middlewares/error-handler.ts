@@ -24,6 +24,8 @@ export const errorHandler = (err: Error, c: Context) => {
 
   const cause = err.cause as any;
 
+  console.error(err);
+
   // zod error
   if (err instanceof ZodError) {
     statusCode = 400;
@@ -46,7 +48,12 @@ export const errorHandler = (err: Error, c: Context) => {
     message = (err?.cause as any)?.message || err.message || "Drizzle Error";
   }
 
-  console.error(err);
+  // syntex error 
+  if(err.name === 'SyntaxError') {
+    statusCode = 400,
+    message = "No input is given"
+    code= 40003
+  }
 
   c.status(statusCode);
   return c.json({
