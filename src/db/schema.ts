@@ -1,4 +1,4 @@
-import { relations, sql } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import * as t from "drizzle-orm/mysql-core";
 import { createdAt, id, updatedAt } from "./helper";
 
@@ -11,10 +11,7 @@ export const AdminRole = t.mysqlEnum("admin_role", [
 export const userTable = t.mysqlTable(
   "user",
   {
-    id: t
-      .char("id", { length: 36 })
-      .primaryKey()
-      .default(sql`(UUID())`),
+    id: id,
     fullName: t.varchar("full_name", { length: 150 }).notNull(),
     username: t.varchar("username", { length: 150 }).notNull(),
     password: t.varchar("password", { length: 100 }).notNull(),
@@ -66,27 +63,11 @@ export const surveyTable = t.mysqlTable("survey", {
     .varchar("doctor_id", { length: 36 })
     .notNull()
     .references(() => doctorTable.id, { onDelete: "restrict" }),
-  createdAt: createdAt,
-  updatedAt: updatedAt,
-});
-
-export const surveyMedicineTable = t.mysqlTable("suvery_medicine", {
-  id: id,
-  surveyId: t
-    .varchar("survey_id", { length: 36 })
-    .notNull()
-    .references(() => surveyTable.id, { onDelete: "cascade" }),
   medicineId: t
-    .varchar("medicine", { length: 36 })
+    .varchar("medicine_id", { length: 36 })
     .notNull()
     .references(() => medicineTable.id, { onDelete: "restrict" }),
   createdAt: createdAt,
   updatedAt: updatedAt,
 });
 
-export const SurveyDoctorRelationships = relations(surveyTable, ({ one }) => ({
-  doctor: one(doctorTable, {
-    fields: [surveyTable.doctorId],
-    references: [doctorTable.id],
-  }),
-}));

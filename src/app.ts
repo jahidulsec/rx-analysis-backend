@@ -4,6 +4,7 @@ import { logger } from "hono/logger";
 import router from "./routes";
 import "dotenv/config";
 import { HTTPException } from "hono/http-exception";
+import { errorHandler } from "./middlewares/error-handler";
 
 export const app = new Hono();
 
@@ -20,5 +21,5 @@ app.onError((err, c) => {
   if (err instanceof HTTPException) {
     return err.getResponse();
   }
-  return c.json(err.message);
+  return errorHandler(err, c);
 });

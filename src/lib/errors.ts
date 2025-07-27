@@ -25,22 +25,80 @@ export const notFoundError = (message: string): never => {
     ),
   });
 };
+
 export const badRequestError = (message: string): never => {
-  throw createError(false, "Bad Request", message, 400, 40001);
+  throw new HTTPException(404, {
+    message, // Optional text message
+    res: new Response(
+      JSON.stringify(createError(false, "Bad Request", message, 400, 40001)),
+      {
+        status: 404,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    ),
+  });
 };
 
 export const unauthorizedError = (message: string): never => {
-  throw createError(false, "Unauthorized", message, 401, 40101);
+  throw new HTTPException(404, {
+    message, // Optional text message
+    res: new Response(
+      JSON.stringify(createError(false, "Unauthorized", message, 401, 40101)),
+      {
+        status: 404,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    ),
+  });
 };
 
 export const forbiddenError = (message: string): never => {
-  throw createError(false, "Forbidden!", message, 403, 40301);
+  throw new HTTPException(404, {
+    message, // Optional text message
+    res: new Response(
+      JSON.stringify(createError(false, "Forbidden!", message, 403, 40301)),
+      {
+        status: 404,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    ),
+  });
 };
 
 export const conflictError = (message: string): never => {
-  throw createError(false, "Conflct!", message, 409, 40901);
+  throw new HTTPException(404, {
+    message, // Optional text message
+    res: new Response(
+      JSON.stringify(createError(false, "Conflct!", message, 409, 40901)),
+      {
+        status: 404,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    ),
+  });
 };
 
 export const serverError = (message: string): never => {
-  throw createError(false, "Internal Server Error", message, 500, 50001);
+  throw new HTTPException(404, {
+    message, // Optional text message
+    res: new Response(
+      JSON.stringify(
+        createError(false, "Internal Server Error", message, 500, 50001)
+      ),
+      {
+        status: 404,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    ),
+  });
 };

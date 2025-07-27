@@ -15,6 +15,13 @@
       "when": 1753360313154,
       "tag": "0001_dark_shiva",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1753598933666,
+      "tag": "0002_bright_the_professor",
+      "breakpoints": true
     }
   ]
 }
