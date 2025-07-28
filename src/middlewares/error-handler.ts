@@ -48,11 +48,9 @@ export const errorHandler = (err: Error, c: Context) => {
     message = (err?.cause as any)?.message || err.message || "Drizzle Error";
   }
 
-  // syntex error 
-  if(err.name === 'SyntaxError') {
-    statusCode = 400,
-    message = "No input is given"
-    code= 40003
+  // syntex error
+  if (err.name === "SyntaxError") {
+    (statusCode = 400), (code = 40003);
   }
 
   c.status(statusCode);
