@@ -1,4 +1,4 @@
-import { createError, notFoundError, validationError } from "@/lib/errors";
+import { drizzleError, notFoundError, validationError } from "@/lib/errors";
 import { medicineLib } from "@/lib/medicine";
 import { updateMedicineDTOSchema } from "@/schemas/medicine";
 import { Factory } from "hono/factory";
@@ -7,6 +7,7 @@ import { validator } from "hono/validator";
 const factory = new Factory();
 
 const update = factory.createHandlers(
+  // validate form
   validator("json", (value, c) => {
     const result = updateMedicineDTOSchema.safeParse(value);
 
@@ -19,6 +20,7 @@ const update = factory.createHandlers(
     return result.data;
   }),
 
+  // controller
   async (c) => {
     const formData = c.req.valid("json");
     const id = c.req.param("id") as string;
@@ -34,7 +36,8 @@ const update = factory.createHandlers(
     try {
       await medicineLib.updateOne(id, formData);
     } catch (error) {
-      throw { error: "Drizzle Error" };
+      // throw drizzle error response
+      return drizzleError(c, error as Error);
     }
 
     // response

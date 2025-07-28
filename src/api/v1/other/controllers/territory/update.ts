@@ -1,4 +1,4 @@
-import { notFoundError, validationError } from "@/lib/errors";
+import { drizzleError, notFoundError, validationError } from "@/lib/errors";
 import { territoryLib } from "@/lib/territory";
 import { updateTerritoryDTOSchema } from "@/schemas/territory";
 import { Factory } from "hono/factory";
@@ -7,6 +7,7 @@ import { validator } from "hono/validator";
 const factory = new Factory();
 
 const update = factory.createHandlers(
+  // validate form
   validator("json", (value, c) => {
     const result = updateTerritoryDTOSchema.safeParse(value);
 
@@ -19,6 +20,7 @@ const update = factory.createHandlers(
     return result.data;
   }),
 
+  // controller
   async (c) => {
     //  get form data
     const formData = c.req.valid("json");
@@ -38,16 +40,7 @@ const update = factory.createHandlers(
       await territoryLib.updateOne(id as string, formData);
     } catch (error) {
       // throw drizzle error response
-      const cause = (error as Error).cause as any;
-      return c.json(
-        {
-          success: false,
-          code: 40003,
-          error: cause?.code || "DrizzleError",
-          message: (error as Error).message,
-        },
-        400
-      );
+      return drizzleError(c, error as Error);
     }
 
     const responseData = {

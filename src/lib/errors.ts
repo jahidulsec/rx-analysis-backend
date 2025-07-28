@@ -1,6 +1,7 @@
 import type { AppError } from "@/types/error";
 import type { Context } from "hono";
 import { HTTPException } from "hono/http-exception";
+import type { StatusCode } from "hono/utils/http-status";
 
 export const createError = (
   success: boolean,
@@ -116,5 +117,31 @@ export const validationError = (c: Context, result: any) => {
       })),
     },
     422
+  );
+};
+
+export const drizzleError = (c: Context, error: Error) => {
+  const cause = error?.cause as any;
+  let statusCode: StatusCode = 400;
+  let code = 40001;
+  let message = error.message;
+
+  // duplicate error
+  if (cause && cause?.code && cause?.code === "ER_DUP_ENTRY") {
+    // MySQL unique constraint
+    statusCode = 409;
+    code = 40901;
+    error = cause.code || "Bad request";
+    message =
+      (error?.cause as any)?.message || error.message || "Drizzle Error";
+  }
+
+  return c.json(
+    {
+      success: false,
+      error: "DrizzleError",
+      message: error.message,
+    },
+    statusCode
   );
 };
