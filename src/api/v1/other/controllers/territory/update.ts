@@ -1,4 +1,4 @@
-import { notFoundError } from "@/lib/errors";
+import { notFoundError, validationError } from "@/lib/errors";
 import { territoryLib } from "@/lib/territory";
 import { updateTerritoryDTOSchema } from "@/schemas/territory";
 import { Factory } from "hono/factory";
@@ -8,39 +8,47 @@ const factory = new Factory();
 
 const update = factory.createHandlers(
   validator("json", (value, c) => {
-    // validated data
-    const validatedData = updateTerritoryDTOSchema.safeParse(value);
+    const result = updateTerritoryDTOSchema.safeParse(value);
 
-    if (!validatedData.success) {
-      return c.json({
-        status: false,
-        error: "Zod Error",
-        errors: validatedData.error.issues.map((issue) => ({
-          field: issue.path.join("."),
-          message: issue.message,
-          code: issue.code,
-        })),
-      });
+    // throw validator error response
+    if (!result.success) {
+      return validationError(c, result);
     }
 
-    return validatedData.data;
+    // return formData
+    return result.data;
   }),
+
   async (c) => {
     //  get form data
     const formData = c.req.valid("json");
 
     // get params
-    const id = c.req.param("id");
+    const id = c.req.param("id") as string;
 
     // get territory
-    const territory = await territoryLib.getSingle(id as string);
+    const territory = await territoryLib.getSingle(id);
 
-    if (territory.length === 0) {
+    if (!territory || (Array.isArray(territory) && territory.length === 0)) {
       notFoundError("Territory does not exist");
     }
 
-    //  create territory
-    await territoryLib.updateOne(id as string, formData);
+    //  update territory
+    try {
+      await territoryLib.updateOne(id as string, formData);
+    } catch (error) {
+      // throw drizzle error response
+      const cause = (error as Error).cause as any;
+      return c.json(
+        {
+          success: false,
+          code: 40003,
+          error: cause?.code || "DrizzleError",
+          message: (error as Error).message,
+        },
+        400
+      );
+    }
 
     const responseData = {
       success: true,

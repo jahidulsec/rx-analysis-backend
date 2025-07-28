@@ -1,4 +1,4 @@
-import { notFoundError } from "@/lib/errors";
+import { createError, notFoundError, validationError } from "@/lib/errors";
 import { medicineLib } from "@/lib/medicine";
 import { updateMedicineDTOSchema } from "@/schemas/medicine";
 import { Factory } from "hono/factory";
@@ -12,18 +12,7 @@ const update = factory.createHandlers(
 
     // throw validator error response
     if (!result.success) {
-      return c.json(
-        {
-          success: false,
-          error: "ValidationError",
-          errors: result.error.issues.map((issue) => ({
-            field: issue.path.join("."),
-            message: issue.message,
-            code: issue.code,
-          })),
-        },
-        422
-      );
+      return validationError(c, result);
     }
 
     // return formData
@@ -45,17 +34,7 @@ const update = factory.createHandlers(
     try {
       await medicineLib.updateOne(id, formData);
     } catch (error) {
-      // throw drizzle error response
-      const cause = (error as Error).cause as any;
-      return c.json(
-        {
-          success: false,
-          code: 40003,
-          error: cause?.code || "DrizzleError",
-          message: (error as Error).message,
-        },
-        400
-      );
+      throw { error: "Drizzle Error" };
     }
 
     // response

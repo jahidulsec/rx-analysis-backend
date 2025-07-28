@@ -1,4 +1,5 @@
 import type { AppError } from "@/types/error";
+import type { Context } from "hono";
 import { HTTPException } from "hono/http-exception";
 
 export const createError = (
@@ -101,4 +102,19 @@ export const serverError = (message: string): never => {
       }
     ),
   });
+};
+
+export const validationError = (c: Context, result: any) => {
+  return c.json(
+    {
+      success: false,
+      error: "ValidationError",
+      errors: result.error.issues.map((issue: any) => ({
+        field: issue.path.join("."),
+        message: issue.message,
+        code: issue.code,
+      })),
+    },
+    422
+  );
 };
