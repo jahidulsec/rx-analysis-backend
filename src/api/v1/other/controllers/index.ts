@@ -1,3 +1,8 @@
+import { createMedicine } from "./medicine/create";
+import { deleteMedicine } from "./medicine/delete";
+import { getMedicines } from "./medicine/get-multi";
+import { getMedicine } from "./medicine/get-single";
+import { updateMedicine } from "./medicine/update";
 import { createTerritory } from "./territory/create";
 import { deleteTerritory } from "./territory/delete";
 import { getTerritories } from "./territory/get-multi";
@@ -10,4 +15,9 @@ export const controller = {
   createTerritory,
   updateTerritory,
   deleteTerritory,
+  getMedicine,
+  getMedicines,
+  createMedicine,
+  updateMedicine,
+  deleteMedicine,
 };
