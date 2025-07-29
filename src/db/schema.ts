@@ -62,6 +62,10 @@ export const surveyTable = t.mysqlTable("survey", {
     .varchar("doctor_id", { length: 36 })
     .notNull()
     .references(() => doctorTable.id, { onDelete: "restrict" }),
+  createdBy: t
+    .varchar("created_by", { length: 36 })
+    .notNull()
+    .references(() => userTable.id, { onDelete: "restrict" }),
   createdAt: createdAt,
   updatedAt: updatedAt,
 });
@@ -76,6 +80,7 @@ export const surveyMedicineTable = t.mysqlTable("survey_medicine", {
     .varchar("medicine_id", { length: 36 })
     .notNull()
     .references(() => medicineTable.id, { onDelete: "restrict" }),
+  quantity: t.int().notNull(),
   createdAt: createdAt,
   updatedAt: updatedAt,
 });

@@ -1,0 +1,2 @@
+ALTER TABLE `survey` ADD `created_by` varchar(36) NOT NULL;--> statement-breakpoint
+ALTER TABLE `survey` ADD CONSTRAINT `survey_created_by_user_id_fk` FOREIGN KEY (`created_by`) REFERENCES `user`(`id`) ON DELETE restrict ON UPDATE no action;

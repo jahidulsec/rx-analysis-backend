@@ -1,0 +1,1 @@
+ALTER TABLE `survey_medicine` ADD `quantity` int NOT NULL;
