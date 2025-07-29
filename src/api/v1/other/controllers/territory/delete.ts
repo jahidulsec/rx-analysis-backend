@@ -18,7 +18,7 @@ const deleteOne = async (c: Context) => {
 
   const responseData = {
     success: true,
-    message: "User deleted successfully!",
+    message: "Doctor deleted successfully!",
     data: territory,
   };
 
