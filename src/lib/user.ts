@@ -56,6 +56,16 @@ const getSingle = async (id: string) => {
   return data;
 };
 
+const getSingleByUsername = async (username: string) => {
+  const data = await db
+    .select()
+    .from(userTable)
+    .where(eq(userTable.username, username))
+    .limit(1);
+
+  return data;
+};
+
 const createNew = async (info: createUserInputsTypes) => {
   const data = await db.insert(userTable).values({
     fullName: info.fullName,
@@ -86,6 +96,7 @@ const deleteOne = async (id: string) => {
 export const userLib = {
   getMulti,
   getSingle,
+  getSingleByUsername,
   createNew,
   updateOne,
   deleteOne,
