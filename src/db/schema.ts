@@ -1,5 +1,6 @@
 import * as t from "drizzle-orm/mysql-core";
 import { createdAt, id, updatedAt } from "./helper";
+import { relations } from "drizzle-orm";
 
 export const AdminRole = t.mysqlEnum("admin_role", [
   "superadmin",
@@ -84,3 +85,17 @@ export const surveyMedicineTable = t.mysqlTable("survey_medicine", {
   createdAt: createdAt,
   updatedAt: updatedAt,
 });
+
+export const surveyMedicineRelations = relations(
+  surveyMedicineTable,
+  ({ one }) => ({
+    survey: one(surveyTable, {
+      fields: [surveyMedicineTable.surveyId],
+      references: [surveyTable.id],
+    }),
+    medicine: one(medicineTable, {
+      fields: [surveyMedicineTable.medicineId],
+      references: [medicineTable.id],
+    }),
+  })
+);

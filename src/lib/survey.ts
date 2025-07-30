@@ -19,18 +19,28 @@ const getMulti = async (queries: surveysQueryInputTypes) => {
 
   const filters = [];
 
-  // base query and base count query
+  // Main query with joins
   const query = db
-    .select()
+    .selectDistinct({
+      id: surveyTable.id,
+      doctorId: doctorTable.id,
+      doctorName: doctorTable.fullName,
+      createdBy: userTable.id,
+      userName: userTable.fullName,
+      createdAt: surveyTable.createdAt,
+    })
     .from(surveyTable)
     .innerJoin(doctorTable, eq(surveyTable.doctorId, doctorTable.id))
     .innerJoin(userTable, eq(userTable.id, surveyTable.createdBy));
 
+  // Count query
   const countQuery = db
     .select({ count: sql<number>`count(*)` })
-    .from(surveyTable);
+    .from(surveyTable)
+    .innerJoin(doctorTable, eq(surveyTable.doctorId, doctorTable.id))
+    .innerJoin(userTable, eq(userTable.id, surveyTable.createdBy));
 
-  // add search
+  // Search filter
   if (queries.search) {
     filters.push(
       or(
@@ -40,24 +50,68 @@ const getMulti = async (queries: surveysQueryInputTypes) => {
     );
   }
 
+  // Apply filters
   if (filters.length > 0) {
     query.where(and(...filters));
     countQuery.where(and(...filters));
   }
 
-  // adding pagination
+  // Pagination
   query.limit(size).offset(size * (page - 1));
 
-  // sorting
+  // Sorting
   if (sort === "asc") {
     query.orderBy(asc(surveyTable.createdAt));
   } else {
     query.orderBy(desc(surveyTable.createdAt));
   }
 
-  const [data, [{ count }]] = await Promise.all([query, countQuery]);
+  // Execute queries
+  const [rawData, [{ count }]] = await Promise.all([query, countQuery]);
 
-  return { data, count };
+  // Group by surveyId
+  // const grouped = rawData.reduce(
+  //   (acc, row) => {
+  //     const existing = acc.find((s) => s.id === row.surveyId);
+
+  //     const medicine = {
+  //       id: row.medicineId,
+  //       quantity: row.quantity,
+  //     };
+
+  //     if (existing) {
+  //       existing.medicines.push(medicine);
+  //     } else {
+  //       acc.push({
+  //         id: row.surveyId,
+  //         createdAt: row.surveyCreatedAt,
+  //         doctor: {
+  //           id: row.doctorId,
+  //           // name: row.doctorName,
+  //         },
+  //         createdBy: {
+  //           id: row.userId,
+  //           name: row.userName,
+  //         },
+  //         medicines: [medicine],
+  //       });
+  //     }
+
+  //     return acc;
+  //   },
+  //   [] as {
+  //     id: string;
+  //     createdAt: Date;
+  //     doctor: { id: string };
+  //     createdBy: { id: string; name: string };
+  //     medicines: { id: string; quantity: number }[];
+  //   }[]
+  // );
+
+  return {
+    data: rawData,
+    count,
+  };
 };
 
 const getSingle = async (id: string) => {
