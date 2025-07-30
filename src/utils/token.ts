@@ -33,9 +33,9 @@ const generateRefreshToken = async (userId: string) => {
   return data;
 };
 
-const validateRefreshToken = (refreshToken: string) => {
+const validateRefreshToken = async (refreshToken: string) => {
   try {
-    const payload = jwt.verify(
+    const payload = await jwt.verify(
       refreshToken,
       process.env.REFRESH_TOKEN_SECRET as string
     );

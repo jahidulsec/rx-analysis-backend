@@ -1,6 +1,5 @@
 import {
   badRequestError,
-  drizzleError,
   notFoundError,
   validationError,
 } from "@/lib/errors";

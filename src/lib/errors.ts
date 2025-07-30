@@ -29,12 +29,12 @@ export const notFoundError = (message: string): never => {
 };
 
 export const badRequestError = (message: string): never => {
-  throw new HTTPException(404, {
+  throw new HTTPException(400, {
     message, // Optional text message
     res: new Response(
       JSON.stringify(createError(false, "Bad Request", message, 400, 40001)),
       {
-        status: 404,
+        status: 400,
         headers: {
           "Content-Type": "application/json",
         },
@@ -44,12 +44,12 @@ export const badRequestError = (message: string): never => {
 };
 
 export const unauthorizedError = (message: string): never => {
-  throw new HTTPException(404, {
+  throw new HTTPException(401, {
     message, // Optional text message
     res: new Response(
       JSON.stringify(createError(false, "Unauthorized", message, 401, 40101)),
       {
-        status: 404,
+        status: 401,
         headers: {
           "Content-Type": "application/json",
         },
@@ -59,12 +59,12 @@ export const unauthorizedError = (message: string): never => {
 };
 
 export const forbiddenError = (message: string): never => {
-  throw new HTTPException(404, {
+  throw new HTTPException(403, {
     message, // Optional text message
     res: new Response(
       JSON.stringify(createError(false, "Forbidden!", message, 403, 40301)),
       {
-        status: 404,
+        status: 403,
         headers: {
           "Content-Type": "application/json",
         },
@@ -74,12 +74,12 @@ export const forbiddenError = (message: string): never => {
 };
 
 export const conflictError = (message: string): never => {
-  throw new HTTPException(404, {
+  throw new HTTPException(409, {
     message, // Optional text message
     res: new Response(
       JSON.stringify(createError(false, "Conflct!", message, 409, 40901)),
       {
-        status: 404,
+        status: 409,
         headers: {
           "Content-Type": "application/json",
         },
@@ -89,14 +89,14 @@ export const conflictError = (message: string): never => {
 };
 
 export const serverError = (message: string): never => {
-  throw new HTTPException(404, {
+  throw new HTTPException(500, {
     message, // Optional text message
     res: new Response(
       JSON.stringify(
         createError(false, "Internal Server Error", message, 500, 50001)
       ),
       {
-        status: 404,
+        status: 500,
         headers: {
           "Content-Type": "application/json",
         },

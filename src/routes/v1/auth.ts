@@ -6,4 +6,7 @@ const auth = new Hono();
 // login
 auth.post("/login", ...controller.login);
 
+// token
+auth.post("/token/revoke", ...controller.revokeToken);
+
 export { auth as authRoutes };
