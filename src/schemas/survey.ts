@@ -7,7 +7,7 @@ export const medicinesSchema = z.object({
 
 export const createSurveyDTOSchema = z.object({
   doctorId: z.string().min(3),
-  createdBy: z.string().min(3),
+  createdBy: z.string().optional(),
   medicines: z.array(medicinesSchema).min(1),
 });
 
@@ -19,6 +19,7 @@ export const surveysQuerySchema = z.object({
   page: z.coerce.number().int().default(1).optional(),
   size: z.coerce.number().default(20).optional(),
   search: z.string().optional(),
+  createdBy: z.string().optional(),
 });
 
 export type createSurveyInputsTypes = z.infer<typeof createSurveyDTOSchema>;

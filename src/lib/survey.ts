@@ -50,6 +50,10 @@ const getMulti = async (queries: surveysQueryInputTypes) => {
     );
   }
 
+  if (queries.createdBy) {
+    filters.push(eq(surveyTable.createdBy, queries.createdBy));
+  }
+
   // Apply filters
   if (filters.length > 0) {
     query.where(and(...filters));
@@ -92,7 +96,7 @@ const createNew = async (info: createSurveyInputsTypes) => {
   await db.insert(surveyTable).values({
     id: surveyId,
     doctorId: info.doctorId,
-    createdBy: info.createdBy,
+    createdBy: info.createdBy as string,
   });
 
   // //  create suvey medicine list

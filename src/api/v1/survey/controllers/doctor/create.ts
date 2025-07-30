@@ -3,6 +3,7 @@ import { drizzleError, validationError } from "@/lib/errors";
 import { createSurveyDTOSchema } from "@/schemas/survey";
 import { Factory } from "hono/factory";
 import { validator } from "hono/validator";
+import type { AuthUser } from "@/types/auth";
 
 const factory = new Factory();
 
@@ -24,6 +25,11 @@ const create = factory.createHandlers(
   async (c) => {
     //  get form data
     const formData = c.req.valid("json");
+
+    // get authuser
+    const payload: AuthUser = await c.get("jwtPayload");
+
+    formData.createdBy = payload.id;
 
     try {
       //  create survey
