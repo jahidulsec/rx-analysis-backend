@@ -2,11 +2,11 @@ import * as t from "drizzle-orm/mysql-core";
 import { createdAt, id, updatedAt } from "./helper";
 import { relations } from "drizzle-orm";
 
-export const AdminRole = t.mysqlEnum("admin_role", [
-  "superadmin",
-  "chq-admin",
-  "mio",
-]);
+export const AdminRoles = ["superadmin", "chq-admin", "mio"] as const;
+
+export type AdminRole = (typeof AdminRoles)[number];
+
+export const AdminRole = t.mysqlEnum("admin_role", AdminRoles);
 
 export const userTable = t.mysqlTable(
   "user",
