@@ -69,45 +69,6 @@ const getMulti = async (queries: surveysQueryInputTypes) => {
   // Execute queries
   const [rawData, [{ count }]] = await Promise.all([query, countQuery]);
 
-  // Group by surveyId
-  // const grouped = rawData.reduce(
-  //   (acc, row) => {
-  //     const existing = acc.find((s) => s.id === row.surveyId);
-
-  //     const medicine = {
-  //       id: row.medicineId,
-  //       quantity: row.quantity,
-  //     };
-
-  //     if (existing) {
-  //       existing.medicines.push(medicine);
-  //     } else {
-  //       acc.push({
-  //         id: row.surveyId,
-  //         createdAt: row.surveyCreatedAt,
-  //         doctor: {
-  //           id: row.doctorId,
-  //           // name: row.doctorName,
-  //         },
-  //         createdBy: {
-  //           id: row.userId,
-  //           name: row.userName,
-  //         },
-  //         medicines: [medicine],
-  //       });
-  //     }
-
-  //     return acc;
-  //   },
-  //   [] as {
-  //     id: string;
-  //     createdAt: Date;
-  //     doctor: { id: string };
-  //     createdBy: { id: string; name: string };
-  //     medicines: { id: string; quantity: number }[];
-  //   }[]
-  // );
-
   return {
     data: rawData,
     count,

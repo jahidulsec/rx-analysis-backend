@@ -86,16 +86,48 @@ export const surveyMedicineTable = t.mysqlTable("survey_medicine", {
   updatedAt: updatedAt,
 });
 
+export const doctorRelations = relations(doctorTable, ({ one, many }) => ({
+  territory: one(territoryTable, {
+    fields: [doctorTable.territoryId],
+    references: [territoryTable.sapTerritoryId],
+  }),
+  surveys: many(surveyTable),
+}));
+
+export const territoryRelations = relations(territoryTable, ({ many }) => ({
+  doctors: many(doctorTable),
+}));
+
+export const surveyRelations = relations(surveyTable, ({ one, many }) => ({
+  user: one(userTable, {
+    fields: [surveyTable.createdBy],
+    references: [userTable.id],
+  }),
+  doctor: one(doctorTable, {
+    fields: [surveyTable.doctorId],
+    references: [doctorTable.id],
+  }),
+  surveyMedicines: many(surveyMedicineTable),
+}));
+
+export const userRelations = relations(userTable, ({ many }) => ({
+  surveys: many(surveyTable),
+}));
+
 export const surveyMedicineRelations = relations(
   surveyMedicineTable,
   ({ one }) => ({
-    survey: one(surveyTable, {
-      fields: [surveyMedicineTable.surveyId],
-      references: [surveyTable.id],
-    }),
     medicine: one(medicineTable, {
       fields: [surveyMedicineTable.medicineId],
       references: [medicineTable.id],
     }),
+    survey: one(surveyTable, {
+      fields: [surveyMedicineTable.surveyId],
+      references: [surveyTable.id],
+    }),
   })
 );
+
+export const medicineRelations = relations(medicineTable, ({ many }) => ({
+  surveyMedicines: many(surveyMedicineTable),
+}));

@@ -1,5 +1,6 @@
 import { notFoundError } from "@/lib/errors";
 import { surveyLib } from "@/lib/survey";
+import { surveyMedicineLib } from "@/lib/survey-medicine";
 import type { Context } from "hono";
 
 const get = async (c: Context) => {
@@ -13,10 +14,13 @@ const get = async (c: Context) => {
     notFoundError("survey does not exist");
   }
 
+  // get survey medicines
+  const medicines = await surveyMedicineLib.getMulti({ search: data[0].id });
+
   const responseData = {
     success: true,
     message: "Get survey details successfully!",
-    data: data[0],
+    data: { ...data[0], medicines: medicines.data },
   };
 
   //send success response
