@@ -1,5 +1,5 @@
 import controller from "@/api/v1/user";
-import { Hono, type Context } from "hono";
+import { Hono } from "hono";
 import { authorizeRole } from "@/middlewares/authorize";
 import { doctorLib } from "@/lib/doctor";
 import { userLib } from "@/lib/user";
@@ -8,7 +8,7 @@ const user = new Hono();
 
 // user
 user
-  .get("/user", controller.getUsers)
+  .get("/user", authorizeRole("user", "view"), controller.getUsers)
   .post(authorizeRole("user", "create"), controller.createUser);
 
 user
