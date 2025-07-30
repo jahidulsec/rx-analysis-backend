@@ -131,3 +131,6 @@ export const surveyMedicineRelations = relations(
 export const medicineRelations = relations(medicineTable, ({ many }) => ({
   surveyMedicines: many(surveyMedicineTable),
 }));
+
+
+export type User = typeof userTable.$inferSelect

@@ -16,16 +16,15 @@ export async function verifyToken(c: Context, next: Next) {
   }
 
   try {
-    const payload = verify(
+    const payload = await verify(
       token as string,
       process.env.ACCESS_TOKEN_SECRET as string
     );
 
     c.set("jwtPayload", payload);
+    await next();
   } catch (error) {
     console.error(error);
     unauthorizedError("Invalid Token");
   }
-
-  await next();
 }

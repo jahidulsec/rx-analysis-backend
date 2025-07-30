@@ -16,9 +16,6 @@ app.get("/", (c) => {
   return c.text("Welcome to Radiant RX Analysis API");
 });
 
-// Apply verifyToken to all /api/* routes
-app.use("/api/*", verifyToken);
-
 // set api route
 app.route("/api", router);
 

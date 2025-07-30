@@ -85,10 +85,17 @@ const deleteOne = async (id: string) => {
   return data;
 };
 
+const getSingleDoctorPermission = async (id: string) => {
+  const data = await getSingle(id);
+  if (data.length === 0) return undefined;
+  return data[0];
+};
+
 export const doctorLib = {
   getMulti,
   getSingle,
   createNew,
   updateOne,
   deleteOne,
+  getSingleDoctorPermission,
 };

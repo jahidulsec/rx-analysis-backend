@@ -1,8 +1,4 @@
-import {
-  badRequestError,
-  notFoundError,
-  validationError,
-} from "@/lib/errors";
+import { badRequestError, notFoundError, validationError } from "@/lib/errors";
 import { userLib } from "@/lib/user";
 import { userLoginDTOSchema } from "@/schemas/user";
 import { isValidPassword } from "@/utils/password";
@@ -39,7 +35,7 @@ const login = factory.createHandlers(
     if (
       !(await isValidPassword(formData.password, data[0]?.password as string))
     ) {
-      badRequestError("Incorrect password");
+      return badRequestError("Incorrect password");
     }
 
     //  generate tokens
