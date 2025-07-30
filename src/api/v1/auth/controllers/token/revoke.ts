@@ -42,7 +42,7 @@ const revoke = factory.createHandlers(
     // generate token
     const accessToken = await generateAccessToken(
       user[0]?.id as string,
-      user[0]?.fullName as string,
+      user[0]?.username as string,
       user[0]?.role as string
     );
 

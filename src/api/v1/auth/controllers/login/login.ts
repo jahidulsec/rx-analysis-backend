@@ -41,7 +41,7 @@ const login = factory.createHandlers(
     //  generate tokens
     const accessToken = await generateAccessToken(
       data[0].id as string,
-      data[0].fullName as string,
+      data[0].username as string,
       data[0].role as string
     );
     const refreshToken = await generateRefreshToken(data[0]?.id as string);

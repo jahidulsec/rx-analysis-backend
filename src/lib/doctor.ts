@@ -31,6 +31,10 @@ const getMulti = async (queries: doctorsQueryInputTypes) => {
     );
   }
 
+  if (queries.territoryId) {
+    filters.push(eq(doctorTable.territoryId, queries.territoryId));
+  }
+
   if (filters.length > 0) {
     query.where(and(...filters));
     countQuery.where(and(...filters));

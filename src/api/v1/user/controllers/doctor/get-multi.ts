@@ -1,5 +1,6 @@
 import { doctorLib } from "@/lib/doctor";
 import { doctorsQuerySchema } from "@/schemas/doctor";
+import type { AuthUser } from "@/types/auth";
 import { cleanedQuery } from "@/utils/helper";
 import { paginate } from "@/utils/pagination";
 import type { Context } from "hono";
@@ -10,6 +11,13 @@ const get = async (c: Context) => {
 
   // validate incoming body data with defined schema
   const validatedData = doctorsQuerySchema.parse(queries);
+
+  // get authuser
+  const payload: AuthUser = await c.get("jwtPayload");
+
+  if (payload.role === "mio") {
+    validatedData.territoryId = payload.username;
+  }
 
   //get all items with validated queries
   const { data, count } = await doctorLib.getMulti(validatedData);

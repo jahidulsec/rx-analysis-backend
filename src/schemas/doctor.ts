@@ -8,9 +8,7 @@ export const createDoctorDTOSchema = z.object({
   territoryId: z.string().min(3),
 });
 
-export const updateDoctorDTOSchema = createDoctorDTOSchema
-  .omit({})
-  .partial();
+export const updateDoctorDTOSchema = createDoctorDTOSchema.omit({}).partial();
 
 export const doctorsQuerySchema = z.object({
   sort: z.enum(["asc", "desc"]).optional(),
@@ -18,12 +16,9 @@ export const doctorsQuerySchema = z.object({
   page: z.coerce.number().int().default(1).optional(),
   size: z.coerce.number().default(20).optional(),
   search: z.string().optional(),
+  territoryId: z.string().optional(),
 });
 
-export type createDoctorInputsTypes = z.infer<
-  typeof createDoctorDTOSchema
->;
-export type updateDoctorInputTypes = z.infer<
-  typeof updateDoctorDTOSchema
->;
+export type createDoctorInputsTypes = z.infer<typeof createDoctorDTOSchema>;
+export type updateDoctorInputTypes = z.infer<typeof updateDoctorDTOSchema>;
 export type doctorsQueryInputTypes = z.infer<typeof doctorsQuerySchema>;

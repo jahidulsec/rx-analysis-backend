@@ -3,13 +3,13 @@ import * as jwt from "hono/jwt";
 
 const generateAccessToken = async (
   userId: string,
-  fullName: string,
+  username: string,
   role: string
 ) => {
   const data = await jwt.sign(
     {
       id: userId,
-      fullName: fullName,
+      username: username,
       role: role,
       type: "access",
       exp: Math.floor(Date.now() / 1000) + 60 * 15, // 15 mins
