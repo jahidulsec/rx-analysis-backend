@@ -5,7 +5,6 @@ import router from "./routes";
 import "dotenv/config";
 import { HTTPException } from "hono/http-exception";
 import { errorHandler } from "./middlewares/error-handler";
-import { verifyToken } from "./middlewares/verify-token";
 
 export const app = new Hono();
 
@@ -31,6 +30,8 @@ app.notFound((c) => {
 });
 
 app.onError((err, c) => {
+  console.error(err);
+
   if (err instanceof HTTPException) {
     return err.getResponse();
   }

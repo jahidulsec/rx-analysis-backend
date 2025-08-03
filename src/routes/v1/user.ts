@@ -9,7 +9,7 @@ const user = new Hono();
 // user
 user
   .get("/user", authorizeRole("user", "view"), controller.getUsers)
-  .post(authorizeRole("user", "create"), controller.createUser);
+  .post(authorizeRole("user", "create"), ...controller.createUser);
 
 user
   .get(

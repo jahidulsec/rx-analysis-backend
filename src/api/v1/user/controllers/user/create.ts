@@ -1,32 +1,52 @@
+import { drizzleError, validationError } from "@/lib/errors";
 import { userLib } from "@/lib/user";
 import { createUserDTOSchema } from "@/schemas/user";
 import { hashPassword } from "@/utils/password";
-import type { Context } from "hono";
+import { Factory } from "hono/factory";
+import { validator } from "hono/validator";
 
-const create = async (c: Context) => {
-  //  get form data
-  const formData = await c.req.json();
+const factory = new Factory();
 
-  console.log(formData);
+const create = factory.createHandlers(
+  // validator
+  validator("json", (value, c) => {
+    const result = createUserDTOSchema.safeParse(value);
 
-  // validated data
-  const validatedData = createUserDTOSchema.parse(formData);
+    // throw validator error response
+    if (!result.success) {
+      return validationError(c, result);
+    }
 
-  // hash password
-  validatedData.password = await hashPassword(validatedData.password);
+    // return formData
+    return result.data;
+  }),
 
-  //  create user
-  await userLib.createNew(validatedData);
+  // controller
+  async (c) => {
+    //  get form data
+    const formData = c.req.valid("json");
 
-  const responseData = {
-    success: true,
-    message: "New user created successfully!",
-    data: validatedData,
-  };
+    // hash password
+    formData.password = await hashPassword(formData.password);
 
-  //send success response
-  c.status(201)
-  return c.json(responseData);
-};
+    try {
+      //  create user
+      await userLib.createNew(formData);
+    } catch (error) {
+      // throw drizzle error response
+      return drizzleError(c, error as Error);
+    }
+
+    const responseData = {
+      success: true,
+      message: "New user created successfully!",
+      data: formData,
+    };
+
+    //send success response
+    c.status(201);
+    return c.json(responseData);
+  }
+);
 
 export { create as createUser };

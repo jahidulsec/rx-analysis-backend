@@ -130,17 +130,18 @@ export const drizzleError = (c: Context, error: Error) => {
   if (cause && cause?.code && cause?.code === "ER_DUP_ENTRY") {
     // MySQL unique constraint
     statusCode = 409;
-    code = 40901;
-    error = cause.code || "Bad request";
-    message =
-      (error?.cause as any)?.message || error.message || "Drizzle Error";
+    code = code;
+    error = cause.code || "ConflictError";
+    message = cause?.message || error.message || "Unique field conflict";
   }
+
+  console.error(error);
 
   return c.json(
     {
       success: false,
       error: "DrizzleError",
-      message: error.message,
+      message: message,
     },
     statusCode
   );
