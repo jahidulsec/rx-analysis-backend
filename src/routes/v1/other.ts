@@ -7,7 +7,7 @@ const other = new Hono();
 // territory
 other
   .get("/territory", controller.getTerritories)
-  .post(authorizeRole("territory", "create"), controller.createTerritory);
+  .post(authorizeRole("territory", "create"), ...controller.createTerritory);
 
 other
   .get(

@@ -1,28 +1,48 @@
+import { drizzleError, validationError } from "@/lib/errors";
 import { territoryLib } from "@/lib/territory";
 import { createTerritoryDTOSchema } from "@/schemas/territory";
-import type { Context } from "hono";
+import { Factory } from "hono/factory";
+import { validator } from "hono/validator";
 
-const create = async (c: Context) => {
-  //  get form data
-  const formData = await c.req.json();
+const factory = new Factory();
 
-  console.log(formData);
+const create = factory.createHandlers(
+  // validator
+  validator("json", (value, c) => {
+    const result = createTerritoryDTOSchema.safeParse(value);
 
-  // validated data
-  const validatedData = createTerritoryDTOSchema.parse(formData);
+    // throw validator error response
+    if (!result.success) {
+      return validationError(c, result);
+    }
 
-  //  create territory
-  await territoryLib.createNew(validatedData);
+    // return formData
+    return result.data;
+  }),
 
-  const responseData = {
-    success: true,
-    message: "New territory created successfully!",
-    data: validatedData,
-  };
+  // controller
+  async (c) => {
+    //  get form data
+    const formData = c.req.valid("json");
 
-  //send success response
-  c.status(201);
-  return c.json(responseData);
-};
+    try {
+      //  create territory
+      await territoryLib.createNew(formData);
+    } catch (error) {
+      // throw drizzle error response
+      return drizzleError(c, error as Error);
+    }
+
+    const responseData = {
+      success: true,
+      message: "New territory created successfully!",
+      data: formData,
+    };
+
+    //send success response
+    c.status(201);
+    return c.json(responseData);
+  }
+);
 
 export { create as createTerritory };
