@@ -84,6 +84,12 @@ const ROLES = {
       update: true,
       delete: true,
     },
+    medicine: {
+      create: true,
+      view: true,
+      update: true,
+      delete: true,
+    },
   },
   "chq-admin": {
     doctor: {
@@ -116,6 +122,12 @@ const ROLES = {
       update: true,
       delete: true,
     },
+    medicine: {
+      create: true,
+      view: true,
+      update: true,
+      delete: true,
+    },
   },
   mio: {
     doctor: {
@@ -143,6 +155,12 @@ const ROLES = {
       delete: true,
     },
     territory: {
+      create: false,
+      view: true,
+      update: false,
+      delete: false,
+    },
+    medicine: {
       create: false,
       view: true,
       update: false,
