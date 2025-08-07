@@ -1,7 +1,7 @@
-import { createSurvey } from "./doctor/create";
-import { deleteSurvey } from "./doctor/delete";
-import { getSurveys } from "./doctor/get-multi";
-import { getSurvey } from "./doctor/get-single";
+import { createSurvey } from "./survey/create";
+import { deleteSurvey } from "./survey/delete";
+import { getSurveys } from "./survey/get-multi";
+import { getSurvey } from "./survey/get-single";
 
 export const controller = {
   getSurvey,

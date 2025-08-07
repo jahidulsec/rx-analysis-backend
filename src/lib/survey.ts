@@ -3,6 +3,7 @@ import {
   doctorTable,
   surveyMedicineTable,
   surveyTable,
+  territoryTable,
   userTable,
 } from "@/db/schema";
 import type {
@@ -25,12 +26,19 @@ const getMulti = async (queries: surveysQueryInputTypes) => {
       id: surveyTable.id,
       doctorId: doctorTable.id,
       doctorName: doctorTable.fullName,
-      createdBy: userTable.id,
-      userName: userTable.fullName,
+      doctorMobile: doctorTable.mobile,
+      territoryId: territoryTable.sapTerritoryId,
+      territoryName: territoryTable.territory,
+      createdBy: userTable.username,
+      surveyorName: userTable.fullName,
       createdAt: surveyTable.createdAt,
     })
     .from(surveyTable)
     .innerJoin(doctorTable, eq(surveyTable.doctorId, doctorTable.id))
+    .innerJoin(
+      territoryTable,
+      eq(territoryTable.sapTerritoryId, doctorTable.territoryId)
+    )
     .innerJoin(userTable, eq(userTable.id, surveyTable.createdBy));
 
   // Count query
@@ -45,7 +53,9 @@ const getMulti = async (queries: surveysQueryInputTypes) => {
     filters.push(
       or(
         like(doctorTable.fullName, `%${queries.search}%`),
-        like(userTable.fullName, `%${queries.search}%`)
+        like(doctorTable.mobile, `%${queries.search}%`),
+        like(userTable.fullName, `%${queries.search}%`),
+        like(userTable.username, `%${queries.search}%`)
       )
     );
   }
