@@ -91,9 +91,25 @@ const getMulti = async (queries: surveysQueryInputTypes) => {
 
 const getSingle = async (id: string) => {
   const data = await db
-    .select()
+    .select({
+      id: surveyTable.id,
+      doctorId: doctorTable.id,
+      doctorName: doctorTable.fullName,
+      doctorMobile: doctorTable.mobile,
+      territoryId: territoryTable.sapTerritoryId,
+      territoryName: territoryTable.territory,
+      createdBy: userTable.username,
+      surveyorName: userTable.fullName,
+      createdAt: surveyTable.createdAt,
+    })
     .from(surveyTable)
     .where(eq(surveyTable.id, id))
+    .innerJoin(doctorTable, eq(surveyTable.doctorId, doctorTable.id))
+    .innerJoin(
+      territoryTable,
+      eq(territoryTable.sapTerritoryId, doctorTable.territoryId)
+    )
+    .innerJoin(userTable, eq(userTable.id, surveyTable.createdBy))
     .limit(1);
 
   return data;

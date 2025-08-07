@@ -22,6 +22,7 @@ const getMulti = async (queries: surveysMedicineQueryInputTypes) => {
       medicineId: surveyMedicineTable.medicineId,
       medicineName: medicineTable.name,
       quantity: surveyMedicineTable.quantity,
+      type: medicineTable.type,
       createdAt: surveyMedicineTable.createdAt,
     })
     .from(surveyMedicineTable)
