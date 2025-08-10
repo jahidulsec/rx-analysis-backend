@@ -32,4 +32,6 @@ other
   .patch(authorizeRole("medicine", "update"), ...controller.updateMedicine)
   .delete(authorizeRole("medicine", "delete"), controller.deleteMedicine);
 
+other.get("/stats", ...controller.getStats);
+
 export { other as otherRouter };

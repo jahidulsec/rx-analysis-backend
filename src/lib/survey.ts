@@ -11,7 +11,7 @@ import type {
   updateSurveyInputTypes,
   surveysQueryInputTypes,
 } from "@/schemas/survey";
-import { and, asc, desc, eq, like, or, sql } from "drizzle-orm";
+import { and, asc, between, count, desc, eq, like, or, sql } from "drizzle-orm";
 
 const getMulti = async (queries: surveysQueryInputTypes) => {
   const size = queries?.size ?? 20;
